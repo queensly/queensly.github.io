@@ -87,37 +87,46 @@
 
 
 
-<meta name="description" content="title: ǰ���Ż�
-����HTTP����  
-ԭ������������ͬһ�����ķ�������ֻ��ͬʱ����6������-�ֲ�ʽ��
-����������webpack�ȹ������ߣ�requireJS ʵ��ҳ��JS���첽���أ���ʱ�� �ӳټ��أ��Լ�д���⹦�ܼ�������������
+<meta name="description" content="title: 前端优化
+减少HTTP请求  
+原因：浏览器和同一个域的服务器，只能同时存在6个链接-分布式。
+解决方案：webpack等构建工具，requireJS 实现页面JS的异步加载，定时间 延迟加载，自己写类库功能减少类库依赖。
 
 
-ҳ�����Ż�
-�����������ӳټ��ء">
+页面的优化
+解决方案：延迟加载、事件委托、缓存（代码缓存:ajax请求,较深的变量,浏览器缓存(cdn,图片-雪碧图,css，浏览器本地存储）
+
+
+跨域 协">
 <meta property="og:type" content="article">
 <meta property="og:title" content="queensly">
 <meta property="og:url" content="http://yoursite.com/2017/04/11/优化/index.html">
 <meta property="og:site_name" content="queensly">
-<meta property="og:description" content="title: ǰ���Ż�
-����HTTP����  
-ԭ������������ͬһ�����ķ�������ֻ��ͬʱ����6������-�ֲ�ʽ��
-����������webpack�ȹ������ߣ�requireJS ʵ��ҳ��JS���첽���أ���ʱ�� �ӳټ��أ��Լ�д���⹦�ܼ�������������
+<meta property="og:description" content="title: 前端优化
+减少HTTP请求  
+原因：浏览器和同一个域的服务器，只能同时存在6个链接-分布式。
+解决方案：webpack等构建工具，requireJS 实现页面JS的异步加载，定时间 延迟加载，自己写类库功能减少类库依赖。
 
 
-ҳ�����Ż�
-�����������ӳټ��ء">
-<meta property="og:updated_time" content="2017-04-11T02:14:58.233Z">
+页面的优化
+解决方案：延迟加载、事件委托、缓存（代码缓存:ajax请求,较深的变量,浏览器缓存(cdn,图片-雪碧图,css，浏览器本地存储）
+
+
+跨域 协">
+<meta property="og:updated_time" content="2017-04-11T02:21:26.372Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="queensly">
-<meta name="twitter:description" content="title: ǰ���Ż�
-����HTTP����  
-ԭ������������ͬһ�����ķ�������ֻ��ͬʱ����6������-�ֲ�ʽ��
-����������webpack�ȹ������ߣ�requireJS ʵ��ҳ��JS���첽���أ���ʱ�� �ӳټ��أ��Լ�д���⹦�ܼ�������������
+<meta name="twitter:description" content="title: 前端优化
+减少HTTP请求  
+原因：浏览器和同一个域的服务器，只能同时存在6个链接-分布式。
+解决方案：webpack等构建工具，requireJS 实现页面JS的异步加载，定时间 延迟加载，自己写类库功能减少类库依赖。
 
 
-ҳ�����Ż�
-�����������ӳټ��ء">
+页面的优化
+解决方案：延迟加载、事件委托、缓存（代码缓存:ajax请求,较深的变量,浏览器缓存(cdn,图片-雪碧图,css，浏览器本地存储）
+
+
+跨域 协">
 
 
 
@@ -217,7 +226,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
-            Startseite
+            Home
           </a>
         </li>
       
@@ -227,7 +236,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -304,7 +313,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T10:10:37+08:00">
                 2017-04-11
@@ -343,30 +352,30 @@
 
       
         <hr>
-<h2 id="title-j���Z�"><a href="#title-j���Z�" class="headerlink" title="title: ǰ���Ż�"></a>title: ǰ���Ż�</h2><ul>
-<li>����HTTP����  <ul>
-<li>ԭ������������ͬһ�����ķ�������ֻ��ͬʱ����6������-�ֲ�ʽ��</li>
-<li>����������webpack�ȹ������ߣ�requireJS ʵ��ҳ��JS���첽���أ���ʱ�� �ӳټ��أ��Լ�д���⹦�ܼ�������������</li>
+<h2 id="title-前端优化"><a href="#title-前端优化" class="headerlink" title="title: 前端优化"></a>title: 前端优化</h2><ul>
+<li>减少HTTP请求  <ul>
+<li>原因：浏览器和同一个域的服务器，只能同时存在6个链接-分布式。</li>
+<li>解决方案：webpack等构建工具，requireJS 实现页面JS的异步加载，定时间 延迟加载，自己写类库功能减少类库依赖。</li>
 </ul>
 </li>
-<li>ҳ�����Ż�<ul>
-<li>�����������ӳټ��ء��¼�ί�С����棨���뻺��:ajax����,�����ı���,����������(cdn,ͼƬ-ѩ��ͼ,css�����������ش洢��</li>
+<li>页面的优化<ul>
+<li>解决方案：延迟加载、事件委托、缓存（代码缓存:ajax请求,较深的变量,浏览器缓存(cdn,图片-雪碧图,css，浏览器本地存储）</li>
 </ul>
 </li>
-<li>���� Э��/����/�˿�<ul>
-<li>JSONP    script ��ǩ��src ����</li>
+<li>跨域 协议/域名/端口<ul>
+<li>JSONP    script 标签的src 属性</li>
 <li>CORS Access-control-origin-cross </li>
 <li>window.name</li>
 <li>img -src</li>
 <li>iframe</li>
 </ul>
 </li>
-<li>һ��ҳ����URL��������ʾ���ɣ���������ʲô��<ul>
-<li>��Դ���� ��dns�����棬�������� </li>
-<li>ҳ������</li>
+<li>一个页面从URL到加载显示完成，都发生了什么？<ul>
+<li>资源查找 （dns，缓存，发请求） </li>
+<li>页面解析</li>
 </ul>
 </li>
-<li>ǰ�˰�ȫ<br>  xss    1 httponly ����cookie   2��ʽ�����������ݣ�<br>  csrf</li>
+<li>前端安全<br>  xss    1 httponly 保护cookie   2花式控制输入内容，<br>  csrf</li>
 </ul>
 
       
@@ -455,10 +464,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -479,7 +488,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives">
                 <span class="site-state-item-count">4</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -517,7 +526,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title-j���Z�"><span class="nav-number">1.</span> <span class="nav-text">title: ǰ���Ż�</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title-前端优化"><span class="nav-number">1.</span> <span class="nav-text">title: 前端优化</span></a></li></ol></div>
             
 
           </div>
@@ -549,7 +558,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
