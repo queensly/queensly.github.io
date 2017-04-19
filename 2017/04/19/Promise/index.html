@@ -1,0 +1,739 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="###解决异步回调问题
+
+编程中遇到的问题
+如何同步异步请求
+如何解决回调地狱
+
+
+Promise
+Promise的三种状态
+构造一个Promise
+promise的方法会立刻执行
+promise也可以代表一个未来的值
+代表一个用于不会返回的值
+应用状态实现抛硬币
+
+
+实现简单的Promise
+Error会导致触发Reject
+Promise.all实现并行
+Promise.race实现选择
+Pr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="queensly">
+<meta property="og:url" content="http://yoursite.com/2017/04/19/Promise/index.html">
+<meta property="og:site_name" content="queensly">
+<meta property="og:description" content="###解决异步回调问题
+
+编程中遇到的问题
+如何同步异步请求
+如何解决回调地狱
+
+
+Promise
+Promise的三种状态
+构造一个Promise
+promise的方法会立刻执行
+promise也可以代表一个未来的值
+代表一个用于不会返回的值
+应用状态实现抛硬币
+
+
+实现简单的Promise
+Error会导致触发Reject
+Promise.all实现并行
+Promise.race实现选择
+Pr">
+<meta property="og:updated_time" content="2017-04-19T10:06:51.099Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="queensly">
+<meta name="twitter:description" content="###解决异步回调问题
+
+编程中遇到的问题
+如何同步异步请求
+如何解决回调地狱
+
+
+Promise
+Promise的三种状态
+构造一个Promise
+promise的方法会立刻执行
+promise也可以代表一个未来的值
+代表一个用于不会返回的值
+应用状态实现抛硬币
+
+
+实现简单的Promise
+Error会导致触发Reject
+Promise.all实现并行
+Promise.race实现选择
+Pr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/19/Promise/"/>
+
+
+
+
+
+  <title>  | queensly </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">queensly</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/19/Promise/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="queensly">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T18:06:58+08:00">
+                2017-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>###解决异步回调问题</p>
+<ul>
+<li>编程中遇到的问题<ul>
+<li>如何同步异步请求</li>
+<li>如何解决回调地狱</li>
+</ul>
+</li>
+<li>Promise</li>
+<li>Promise的三种状态</li>
+<li>构造一个Promise<ul>
+<li>promise的方法会立刻执行</li>
+<li>promise也可以代表一个未来的值</li>
+<li>代表一个用于不会返回的值</li>
+<li>应用状态实现抛硬币</li>
+</ul>
+</li>
+<li>实现简单的Promise</li>
+<li>Error会导致触发Reject</li>
+<li>Promise.all实现并行</li>
+<li>Promise.race实现选择</li>
+<li>Promise.resolve</li>
+<li>Promise.reject</li>
+<li>封装ajax</li>
+<li>chain中返回结果</li>
+<li>chain中返回promise</li>
+<li>async/await<br>解决异步回调问题<br>1.编程中遇到的问题</li>
+</ul>
+<p>1.1 如何同步异步请求<br>如果几个异步操作之间并没有前后顺序之分,但需要等多个异步操作都完成后才能执行后续的任务，无法实现并行节约时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">let school = &#123;&#125;;</div><div class="line">fs.readFile(&apos;./name.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">    school.name = data;</div><div class="line">&#125;);</div><div class="line">fs.readFile(&apos;./age.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">    school.age = data;</div><div class="line">&#125;);</div><div class="line">console.log(school);</div></pre></td></tr></table></figure>
+<p>1.2 如何解决回调地狱<br>在需要多个操作的时候，会导致多个回调函数嵌套，导致代码不够直观，就是常说的回调地狱</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">fs.readFile(&apos;./content.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">    if(err)console.log(err);</div><div class="line">    fs.readFile(data,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        if(err)console.log(err);</div><div class="line">        console.log(data);</div><div class="line">    &#125;)</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>2.Promise<br>Promise本意是承诺，在程序中的意思就是承诺我过一段时间后会给你一个结果。 什么时候会用到过一段时间？答案是异步操作，异步是指可能比较长时间才有结果的才做，例如网络请求、读取本地文件等</p>
+<p>3.Promise的三种状态<br>例如媳妇说想买个包，这时候他就要”等待”我的回复，我可以过两天买，如果买了表示”成功”，如果我最后拒绝表示”失败”，当然我也有可能一直拖一辈子</p>
+<p>Pending Promise对象实例创建时候的初始状态<br>Fulfilled 可以理解为成功的状态<br>Rejected 可以理解为失败的状态<br>then 方法就是用来指定Promise 对象的状态改变时确定执行的操作，resolve 时执行第一个函数（onFulfilled），reject 时执行第二个函数（onRejected）<br>4.构造一个Promise<br>4.1 promise的方法会立刻执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let promise = new Promise(()=&gt;&#123;</div><div class="line">    console.log(&apos;hello&apos;);</div><div class="line">&#125;);</div><div class="line">console.log(&apos;world&apos;);</div></pre></td></tr></table></figure>
+<p>4.2 promise也可以代表一个未来的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">let promise = new Promise((resolve,reject)=&gt;&#123;</div><div class="line">    fs.readFile(&apos;./content.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        if(err)console.log(err);</div><div class="line">        resolve(data);</div><div class="line">    &#125;)</div><div class="line">&#125;);</div><div class="line">promise.then(data =&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>4.3 代表一个用于不会返回的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">let promise = new Promise((resolve,reject)=&gt;&#123;&#125;);</div><div class="line">promise.then(data =&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>4.4 应用状态实现抛硬币</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">function flip_coin() &#123;</div><div class="line">    return new Promise((resolve,reject)=&gt;&#123;</div><div class="line">        setTimeout(function () &#123;</div><div class="line">            var random =  Math.random();</div><div class="line">            if(random &gt; 0.5)&#123;</div><div class="line">                resolve(&apos;正&apos;);</div><div class="line">            &#125;else&#123;</div><div class="line">                resolve(&apos;反&apos;);</div><div class="line">            &#125;</div><div class="line">        &#125;,2000)</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line">flip_coin().then(data=&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;,data=&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>5.实现简单的Promise</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">function Promise(fn) &#123;</div><div class="line">    fn((data)=&gt;&#123;</div><div class="line">        this.resolve(data)</div><div class="line"></div><div class="line">    &#125;,(data)=&gt;&#123;</div><div class="line">        this.reject(data);</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line">Promise.prototype.resolve = function (data) &#123;</div><div class="line">    this._success(data)</div><div class="line">&#125;;</div><div class="line">Promise.prototype.reject = function (data) &#123;</div><div class="line">    this._error(data);</div><div class="line">&#125;;</div><div class="line">Promise.prototype.then = function (success,error) &#123;</div><div class="line">    this._success = success;</div><div class="line">    this._error = error;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>6.Error会导致触发Reject<br>可以采用then的第二个参数捕获失败，也可以通过catch函数进行捕获</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function flip_coin() &#123;</div><div class="line">    return new Promise((resolve,reject)=&gt;&#123;</div><div class="line">        throw Error(&apos;没有硬币&apos;)</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line">flip_coin().then(data=&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;).catch((e)=&gt;&#123;</div><div class="line">    console.log(e);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>7.Promise.all实现并行<br>接受一个数组，数组内都是Promise实例，返回一个Promise实例，这个Promise实例的状态转移取决于参数的Promise实例的状态变化。当参数中所有的实例都处于resolve状态时，返回的Promise实例会变为resolve状态。如果参数中任意一个实例处于reject状态，返回的Promise实例变为reject状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">let p1 =  new Promise((resolve,reject)=&gt;&#123;</div><div class="line">    fs.readFile(&apos;./name.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        resolve(data);</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line">let p2 = new Promise((resolve,reject)=&gt;&#123;</div><div class="line">    fs.readFile(&apos;./age.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        resolve(data);</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line">Promise.all([p1,p2]).then(([res1,res2])=&gt;&#123;</div><div class="line">    console.log(res1);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>不管两个promise谁先完成，Promise.all 方法会按照数组里面的顺序将结果返回<br>8.Promise.race实现选择<br>接受一个数组，数组内都是Promise实例,返回一个Promise实例，这个Promise实例的状态转移取决于参数的Promise实例的状态变化。当参数中任何一个实例处于resolve状态时，返回的Promise实例会变为resolve状态。如果参数中任意一个实例处于reject状态，返回的Promise实例变为reject状态。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">const fs = require(&apos;fs&apos;);</div><div class="line">let p1 =  new Promise((resolve,reject)=&gt;&#123;</div><div class="line">    fs.readFile(&apos;./name.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        resolve(data);</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line">let p2 = new Promise((resolve,reject)=&gt;&#123;</div><div class="line">    fs.readFile(&apos;./age.txt&apos;,&apos;utf8&apos;,function (err,data) &#123;</div><div class="line">        resolve(data);</div><div class="line">    &#125;);</div><div class="line">&#125;)</div><div class="line">Promise.race([p1,p2]).then(([res1,res2])=&gt;&#123;</div><div class="line">    console.log(res1,res2);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>9.Promise.resolve<br>返回一个Promise实例，这个实例处于resolve状态。</p>
+<p>Promise.resolve(‘成功’).then(data=&gt;{<br>    console.log(data);<br>})<br>10.Promise.reject<br>返回一个Promise实例，这个实例处于reject状态</p>
+<p>Promise.reject(‘失败’).then(data=&gt;{<br>    console.log(data);<br>},re=&gt;{<br>    console.log(re);<br>})<br>11.封装ajax</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">function ajax(&#123;url=new Error(&apos;url必须提供&apos;),method=&apos;GET&apos;,async=true,dataType=&apos;json&apos;&#125;)&#123;</div><div class="line">  return new Promise(function(resolve,reject)&#123;</div><div class="line">     var xhr = new XMLHttpRequest();</div><div class="line">     xhr.open(method,url,async);</div><div class="line">     xhr.responseType = dataType;</div><div class="line">     xhr.onreadystatechange = function()&#123;</div><div class="line">         if(xhr.readyState == 4)&#123;</div><div class="line">             if(/^2\d&#123;2&#125;/.test(xhr.status))&#123;</div><div class="line">                resolve(xhr.response);</div><div class="line">             &#125;else&#123;</div><div class="line">                 reject(xhr.response);</div><div class="line">             &#125;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">      xhr.send();</div><div class="line">  &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>12.chain中返回结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Promise.resolve([1,2,3])</div><div class="line">.then(arr=&gt;&#123;</div><div class="line">    return [...arr,4]</div><div class="line">&#125;).then(arr=&gt;&#123;</div><div class="line">    return [...arr,5]</div><div class="line">&#125;).then(arr=&gt;&#123;</div><div class="line">    console.log(arr);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>13.chain中返回promise<br>then中的结果是promise的resolve后的结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Promise.resolve(&apos;user&apos;).then(data=&gt;&#123;</div><div class="line">    return new Promise(function (resolve,reject) &#123;</div><div class="line">        fetch(&apos;/&apos;+data).then(res=&gt;res.json().then((json)=&gt;&#123;</div><div class="line">            resolve(json)</div><div class="line">        &#125;))</div><div class="line">    &#125;)</div><div class="line">&#125;).then(data=&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>改写的更简单些</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Promise.resolve(&apos;user&apos;).then(data=&gt;&#123;</div><div class="line">    return fetch(&apos;/&apos;+data)</div><div class="line">&#125;).then(res=&gt;&#123;</div><div class="line">    return res.json();</div><div class="line">&#125;).then(data=&gt;&#123;</div><div class="line">    console.log(data);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>14.async/await<br>本质是语法糖，await与async要连用，await后只能跟promise</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">async function getHello() &#123;</div><div class="line">    return new Promise((resolve,reject) =&gt; &#123;</div><div class="line">        setTimeout(function () &#123;</div><div class="line">            resolve(&apos;hello&apos;);</div><div class="line">        &#125;,2000);</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line">async function getData () &#123;</div><div class="line">   var result = await getHello();</div><div class="line">   console.log(result);</div><div class="line">&#125; ;</div><div class="line">getData();</div></pre></td></tr></table></figure>
+<p>本文链接：<a href="http://www.fullstackjavascript.cn/post/promise.html" target="_blank" rel="external">http://www.fullstackjavascript.cn/post/promise.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/11/RegExp/" rel="next" title="正则">
+                <i class="fa fa-chevron-left"></i> 正则
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
